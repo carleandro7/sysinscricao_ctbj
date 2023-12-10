@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Instituicao {
+  id             Int             @id @default(autoincrement())
+  nome           String          @unique @db.VarChar(150)
+  users          User[]
+  modulos        Modulo[]
+  cursos         Curso[]
+  selecaomodelos Selecaomodelo[]
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  nome     String  @db.VarChar(150)
+  email    String  @unique
+  telefone String?
+  senha    String
+  status   Int
+
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id])
+  instituicaoId Int
+}
+
+model Modulo {
+  id            Int         @id @default(autoincrement())
+  nome          String      @db.VarChar(150)
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id])
+  instituicaoId Int
+}
+
+model Curso {
+  id            Int         @id @default(autoincrement())
+  nome          String      @db.VarChar(150)
+  instituicao   Instituicao @relation(fields: [instituicaoId], references: [id])
+  instituicaoId Int
+}
+
+model Selecaomodelo {
+  id                 Int          @id @default(autoincrement())
+  descricao          String       @db.VarChar(150)
+  inicio_inscricao   DateTime
+  fim_inscricao      DateTime
+  inicio_resultado   DateTime
+  fim_resultado      DateTime
+  inicio_recurso     DateTime
+  fim_recurso        DateTime
+  resultado_final    DateTime
+  texto_documentacao String
+  texto_final_pagina String
+  instituicao        Instituicao? @relation(fields: [instituicaoId], references: [id])
+  instituicaoId      Int?
+  modelos            Modelo[]
+}
+
+model Modelo {
+  id              Int            @id @default(autoincrement())
+  nome            String         @db.VarChar(150)
+  replica_form    Int
+  ordem           Int
+  Selecaomodelo   Selecaomodelo? @relation(fields: [selecaomodeloId], references: [id])
+  selecaomodeloId Int?
+  campoatts       Campoatt[]
+}
+
+model Campoatt {
+  id                    Int          @id @default(autoincrement())
+  titulo                String
+  preenchimento_inicial String
+  tipocampo             Int
+  obrigatorio           Int
+  modelo                Modelo?      @relation(fields: [modeloId], references: [id])
+  modeloId              Int?
+  listselects           Listselect[]
+}
+
+model Listselect {
+  id         Int       @id @default(autoincrement())
+  texto      String
+  campoatt   Campoatt? @relation(fields: [campoattId], references: [id])
+  campoattId Int?
+}
