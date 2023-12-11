@@ -1,0 +1,64 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenav.toggle()" matTooltip="Menu">
+      <mat-icon>menu</mat-icon>
+  </button>
+  <span>SysInscrição</span>
+  <span class="toolbar-item-spacer"></span>
+  <button mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+      <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+      <button mat-menu-item routerLink="#">
+        <mat-icon>person</mat-icon><span>Carleandro de Oliveira Nolêto</span>
+      </button>
+      <button mat-menu-item routerLink="#">
+          <mat-icon>settings</mat-icon><span>Alterar Senha</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item routerLink="#">
+          <mat-icon>exit_to_app</mat-icon>Sair
+      </button>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container" >
+  <mat-sidenav #sidenav opened="true" mode="side" [class.mat-elevation-z5]="true" class="app-sidenav">
+      <mat-nav-list>
+          <mat-list-item routerLink="#">
+              <button mat-button> <mat-icon>dashboard</mat-icon>Dashboard</button>
+          </mat-list-item>
+          <mat-list-item routerLink="#">
+            <button mat-button> <mat-icon>home</mat-icon>Home</button>
+        </mat-list-item>
+
+
+          <mat-expansion-panel [class.mat-elevation-z0]="true">
+              <mat-expansion-panel-header>
+                  Mobile Phone
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item routerLink="#">
+                    <button mat-button> <mat-icon>apple</mat-icon>Aplle</button>
+                  </a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+          <mat-expansion-panel [class.mat-elevation-z0]="true">
+              <mat-expansion-panel-header>
+                  Frameworks
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <a mat-list-item routerLink="#">
+                  <button mat-button> <mat-icon>apple</mat-icon>Aplle</button>
+                </a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+      </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      <router-outlet>
+          <div class="app-sidenav-content">
+              Components open here
+          </div>
+      </router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
