@@ -1,73 +1,48 @@
 <app-menubar>
-    <form  (ngSubmit)="SaveCustomer()">
-        <mat-card class="container-fluid">
-            <mat-card-content class="row">
-                
-                <mat-form-field class="col col-lg-6">
-                    <mat-label>Name</mat-label>
-                    <input formControlName="name" matInput>
-                </mat-form-field >
-                <mat-form-field class="col col-lg-6">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email">
-                </mat-form-field>
+
+    <form #form="ngForm" (ngSubmit)="submitForm(form)">
+        <input  type="text" [(ngModel)]="instituicao.id"  name="id"  class="form-control" readonly>
+        <input  type="text" [(ngModel)]="instituicao.nome"  name="nome"  class="form-control" required>
         
-                <mat-form-field class="mat-50">
-                    <mat-label>Phone</mat-label>
-                    <input matInput formControlName="phone">
-                </mat-form-field>
-        
-                <mat-form-field class="mat-50">
-                    <mat-label>Country</mat-label>
-                    <!-- <input matInput> -->
-                    <mat-select formControlName="country">
-                        <mat-option [value]="item" *ngFor="let item of countrylist">{{item}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-        
-                <mat-form-field>
-                    <mat-label>Address</mat-label>
-                    <!-- <input matInput> -->
-                    <textarea matInput formControlName="address"></textarea>
-                </mat-form-field>
-        
-                <mat-form-field class="mat-50">
-                    <mat-label>Term</mat-label>
-                    <input [matAutocomplete]="auto" formControlName="term" matInput>
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let item of termlist" [value]="item">
-                            {{item}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-        
-                <mat-form-field class="mat-50">
-                    <mat-label>Date of Birth</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="dob">
-                    <mat-datepicker-toggle matIconSuffix  [for]="picker"></mat-datepicker-toggle>
-                    <mat-hint>dd/MM/yyyy</mat-hint>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-        
-                <div>
-                    <mat-radio-group formControlName="gender" color="primary">
-                        <mat-radio-button value="Male">Male</mat-radio-button>
-                        <mat-radio-button value="Female">Female</mat-radio-button>
-                    </mat-radio-group>
-                    <mat-checkbox formControlName="status" color="warn">Is Active</mat-checkbox>
-                </div>
-        
-                
+        {{form.valid}}
+        <button>Submit</button>
+    </form>
+    {{form.value | json }}
     
-        
-            </mat-card-content>
-            <mat-card-footer>
-            <div style="margin:2%;text-align: right;">
-                <button mat-raised-button type="submit" color="primary">Save</button>
-                <button mat-raised-button color="warn" (click)="clearform()">Clear</button>
-            </div>
-            </mat-card-footer>
-        </mat-card>
-        
-        </form>    
+    <div>
+      <!-- Adicionar botões de navegação -->
+      <button (click)="firstProduct()">Primeiro Produto</button>
+      <button (click)="prevProduct()">Anterior Produto</button>
+      <button (click)="nextProduct()">Próximo Produto</button>
+      <button (click)="lastProduct()">Último Produto</button>
+    </div>
+    {{currentProductIndex}}
+    <li *ngFor="let item of instituicaos">
+    
+    [{{item.id}}]  
+    <input type="text" [(ngModel)] = "item.nome" >
+    <button (click)="instituicaoViu(item.id)">Visualizar</button>
+    <button (click)="instituicaoDelete(item.id)">Delete</button>
+    </li>
+    
+    <!-- Adicionar navegação de página -->
+    <div>
+      <button *ngFor="let page of pages" (click)="onPageChange(page)">
+        {{ page }}
+      </button>
+    </div>
+    
+    <div>
+      <button (click)="firstPage()">Primeira</button>
+      <button (click)="prevPage()">Anterior</button>
+      <ng-container *ngFor="let page of pages_i">
+        <button *ngIf="page !== -1" (click)="goToPage(page)">{{ page }}</button>
+        <span *ngIf="page === -1">...</span>
+      </ng-container>
+      <button (click)="nextPage()">Próxima</button>
+      <button (click)="lastPage()">Última</button>
+    </div>
+    
+
+
 </app-menubar>
