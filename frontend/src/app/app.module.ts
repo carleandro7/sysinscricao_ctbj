@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { MenubarComponent } from './component/menubar/menubar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material-module';
+import { InstituicaoComponent } from './component/instituicao/instituicao.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { MaterialModule } from './material-module';
   ],
   declarations: [
     AppComponent,
-    MenubarComponent
+    MenubarComponent,
+    InstituicaoComponent
   ],
   
   providers: [],
