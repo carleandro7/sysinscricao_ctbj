@@ -59,3 +59,31 @@
   .btn_grid{
     margin-left: 5px;
   }
+
+  .nav-grid{
+    margin-bottom: 20px;
+  }
+
+
+  .demo-table {
+    width: 100%;
+  }
+  
+  .mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+  
+  .mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+  }
+  
+  .demo-row-is-clicked {
+    font-weight: bold;
+  }
+  
+
+  .selected-row {
+    background-color: #e0e0e0; /* Cor de fundo para a linha selecionada */
+  }

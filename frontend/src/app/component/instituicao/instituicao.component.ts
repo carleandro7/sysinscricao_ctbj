@@ -1,96 +1,121 @@
-import { NgFor } from '@angular/common';
+
 import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
-import { FormBuilder, NgForm, Validators  } from '@angular/forms';
+import {  NgForm  } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { InstituicaoModel } from 'src/app/module/instituicao-model';
 import { InstituicaoService } from 'src/app/services/instituicao.service';
+import { ConfirmDialogComponent, ConfirmDialogData  } from '../util/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SuccessDialogComponent, SuccessDialoggData } from '../util/success-dialog/success-dialog.component';
+
+
 
 @Component({
   selector: 'app-instituicao',
   templateUrl: './instituicao.component.html',
-  styleUrls: ['./instituicao.component.scss']
+  styleUrls: ['./instituicao.component.scss'],
 })
 export class InstituicaoComponent implements OnInit, AfterViewInit {
   public instituicao:any = {};
   public instituicaos: Array<InstituicaoModel> = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  public displayedColumns = ['id', 'nome'];
-  public dataSource = new MatTableDataSource<InstituicaoModel>();
+  public displayedColumns = ['id', 'nome', 'actions'];
+  public dataSource:any;
+  public clickedRows = new Set<InstituicaoModel>();
+  public selectedRowIndex: number = -1;
+  private index_aux:number = -1;
+  private size_page:number = 20;
+  public firstButton: number = 0;
+  public nextButton: number = 0;
+  public prevButton: number = 0;
+  public lastButton: number = 0;
 
-  public cursor = 0;
-
-  public pageSize = 4; // Número de produtos por página
-  public currentPage = 1;
-  public totalPages = 0
-  public pages_i: number[]| any
-  public currentProductIndex: number = 0;
-
-
-  constructor(private formBuilder: FormBuilder, private instituicaoService: InstituicaoService){}
+  constructor(private dialog: MatDialog, private instituicaoService: InstituicaoService){}
 
   ngOnInit(): void{
     this.loadInstituicao();
+  }
 
+  ngAfterViewInit(): void {
+    this.size_page = this.paginator.pageSize;
   }
 
   public loadInstituicao(): void {
-    this.instituicaoService.getInsituicao(this.currentPage, this.pageSize)
+    this.instituicaoService.getInsituicao(0,0)
       .subscribe({
         next: (res) => {
-          console.log(res[1])
-          this.instituicaos =  res[0]
-          this.totalPages =   Math.ceil(res[1]/this.pageSize);
-          this.pages_i = this.calculateDisplayedPages();
-          if (this.instituicaos.length > 0) {
-            this.currentProductIndex = 0;
-          }
+          this.instituicaos =  res[0];
+          this.dataSource= new MatTableDataSource(this.instituicaos);
+          this.dataSource.paginator = this.paginator;
+          this.index_aux = -1;
+          this.verificaButton();
         },
         error: (err) => console.log(err)
     });
   }
 
-  public onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadInstituicao();
+
+  selectRow(row: any) {
+    this.selectedRowIndex = row.id; // Supondo que você tenha uma propriedade id na sua fonte de dados
+    const aux = this.instituicaos.filter(instituicao => instituicao.id === row.id);
+    this.instituicao = aux[0];
+    this.index_aux = this.instituicaos.indexOf(this.instituicao);
+  }
+  
+  public linha_tabela(row: any) {
+    this.selectRow(row);
+    this.verificaButton();
   }
 
-  public get pages(): number[] {
-    // Adicione lógica para calcular o número total de páginas
-    // com base na resposta do backend ou em uma variável separada
-    //const totalPages = 10; // Substitua pelo valor real
-    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
-  }
-
-  ngAfterViewInit(): void {
-   
-    this.dataSource.data = this.instituicaos;
-    this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource)
-    
-  }
-
-
-  public instituicaoAll?(){
-    this.instituicaoService.instituicaoList().subscribe({
-      next: (res) => this.instituicaos =  res,
-      error: (err) => console.log(err)
-  });
+  public verificaButton(){
+    if(this.index_aux != -1){
+      const aux = this.instituicaos[this.index_aux];
+      if(this.index_aux == 0){
+        this.firstButton = 0;
+        this.prevButton = 0;
+      }else{
+        this.firstButton = 1;
+        this.prevButton = 1;
+      }
+      if(this.index_aux == (this.instituicaos.length-1)){
+        this.nextButton = 0;
+        this.lastButton = 0;
+      }else{
+        this.nextButton = 1;
+        this.lastButton = 1;
+      }
+    }else{
+      this.firstButton = 0;
+      this.prevButton = 0;
+      this.nextButton = 0;
+      this.lastButton = 0;
+    }
   }
 
   public submitForm(form: NgForm){
-    console.log(form.value)
     if(!form.value.id){
       this.instituicaoService.instituicaoAdd(form.value.nome).subscribe({
         next: (res) => {
           this.loadInstituicao()
           form.reset()
+          this.msg_dialogo("Aviso", "Salvo com Sucesso!")
         },
-        error: (err) => console.log(err)
+        error: (err) => {
+          this.msg_dialogo("Erro", err)
+        }
       });
     }else{
       this.instituicaoEdit(form.value.id, form.value.nome, form)
     }
+  }
+
+  public clearForm(form: NgForm){
+    this.instituicao = {}
+    this.index_aux = -1;
+    this.selectedRowIndex = -1;
+    this.verificaButton();
+    form.reset()
   }
 
   public instituicaoEdit(id:number, value:string, form: NgForm){
@@ -98,114 +123,127 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
       next: (res) => { 
         this.loadInstituicao()
         form.reset()
+        this.msg_dialogo("Aviso", "Alterado com Sucesso!")
       },
       error: (err) => {
-        console.log(err);
-        window.alert("Erro ao alterar")
+        this.msg_dialogo("Erro", err)
       }
     });
   }
 
-  calculateDisplayedPages(): number[] {
-    const MAX_DISPLAYED_PAGES = 6; // Máximo de páginas exibidas
-
-    if (this.totalPages <= MAX_DISPLAYED_PAGES) {
-      return Array.from({ length: this.totalPages }, (_, index) => index + 1);
-    } else {
-      const firstPages = Array.from({ length: 3 }, (_, index) => index + 1);
-      const lastPages = Array.from({ length: 3 }, (_, index) => this.totalPages - 2 + index);
-      return [...firstPages, -1, ...lastPages];
+  onPageChange(event: any) {
+    if(this.size_page != this.paginator.pageSize && this.size_page > this.paginator.pageSize){
+      if (this.instituicaos.length > 0) {
+        this.linha_tabela(this.instituicaos[0]);
+      }
+      this.size_page = this.paginator.pageSize;
+    }else if(this.size_page != this.paginator.pageSize){
+      this.size_page = this.paginator.pageSize;
     }
   }
 
-  // Função para navegar para uma página específica
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.loadInstituicao();
-    }
+  goToPage(pageNumber: number) {
+    this.paginator.pageIndex = pageNumber;
+    this.paginator.page.emit({ pageIndex: pageNumber, pageSize: this.paginator.pageSize, length: this.paginator.length });
   }
 
-  // Função para navegar para a próxima página
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadInstituicao();
-    }
+  calcularTotalPaginas(){
+    const totalItems = this.paginator.length;
+    const itemsPerPage = this.paginator.pageSize;
+    return Math.ceil(totalItems / itemsPerPage);
   }
 
-  // Função para navegar para a página anterior
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadInstituicao();
-    }
-  }
-
-  // Função para navegar para a primeira página
-  firstPage(): void {
-    this.goToPage(1);
-  }
-
-  // Função para navegar para a última página
-  lastPage(): void {
-    this.goToPage(this.totalPages);
+  calcularPaginaAtual(index:any){
+    const itemsPerPage = this.paginator.pageSize;
+    const pageIndex = Math.floor(index / itemsPerPage);
+    return pageIndex;
   }
 
   // Função para navegar para o primeiro produto
-  firstProduct(): void {
-    console.log(`${this.currentProductIndex}`);
+  public firstInstituicao(): void {
     if (this.instituicaos.length > 0) {
-      this.currentProductIndex = 0;
+      this.linha_tabela(this.instituicaos[0]);
+      this.goToPage(0);
     }
   }
 
   // Função para navegar para o produto anterior
-  prevProduct(): void {
-    console.log(`${this.currentProductIndex}`);
-    if (this.currentProductIndex > 0) {
-      this.currentProductIndex--;
+  prevInstituicao(): void {
+    if (this.index_aux > 0) {
+      this.index_aux = this.instituicaos.indexOf(this.instituicao);
+      this.linha_tabela( this.instituicaos[this.index_aux-1]);
+      this.goToPage(this.calcularPaginaAtual(this.index_aux))
     }
   }
 
   // Função para navegar para o próximo produto
-  nextProduct(): void {
-    console.log(`${this.currentProductIndex}`);
-    if (this.currentProductIndex < this.instituicaos.length - 1) {
-      this.currentProductIndex++;
+  nextInstituicao(): void {
+    if (this.index_aux < this.instituicaos.length - 1) {
+      this.index_aux = this.instituicaos.indexOf(this.instituicao);
+      this.linha_tabela( this.instituicaos[this.index_aux+1])
+      this.goToPage(this.calcularPaginaAtual(this.index_aux))
     }
   }
 
   // Função para navegar para o último produto
-  lastProduct(): void {
-    console.log(`${this.currentProductIndex}`);
-    if (this.instituicaos.length > 0) {
-      this.currentProductIndex = this.instituicaos.length - 1;
+  lastInstituicao(): void {
+    if (this.instituicaos.length-1 > this.index_aux) {
+      this.linha_tabela( this.instituicaos[this.instituicaos.length - 1])
+      const total = this.calcularTotalPaginas()
+      this.goToPage(total-1)
     }
   }
 
-
-  
-
-  public instituicaoViu(id:number){
+  public instituicaoVisualizar(id:number){
     this.instituicaoService.instituicaoVisualizar(id).subscribe({
       next: (res) => { 
         this.instituicao = res
-        console.log(this.instituicao.nome)
       },
       error: (err) => {
-        console.log(err);
         window.alert("Erro ao alterar")
       }
     });
   }
 
   public instituicaoDelete(id: number){
-   return this.instituicaoService.instituicaoDelete(id).subscribe({
-    next: (res) => {
-      this.loadInstituicao()
-      },
-      error: (err) => console.log(err)
-   })
+    const dialogData: ConfirmDialogData  = {
+      title: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir este item de código ${id} ?`
+    };
+
+  
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: dialogData
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Chame sua lógica de exclusão aqui
+         this.instituicaoService.instituicaoDelete(id).subscribe({
+          next: (res) => {
+            this.loadInstituicao();
+            this.instituicao = {}
+            this.msg_dialogo("Aviso", "Excluído com sucesso")
+            },
+            error: (err) => {
+              this.msg_dialogo("Erro", err)
+            }
+         });
+      } else {
+        //console.log('Exclusão cancelada.');
+      }
+    });
+   
+  }
+
+  msg_dialogo(title:any, msg:any){
+    const dialogData: SuccessDialoggData  = {
+      title: title,
+      message: msg
+    };
+  
+    const dialogRef = this.dialog.open(SuccessDialogComponent, {
+      data: dialogData
+    });
   }
 }

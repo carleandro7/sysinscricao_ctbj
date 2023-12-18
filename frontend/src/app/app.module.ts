@@ -9,6 +9,8 @@ import { MaterialModule } from './material-module';
 import { InstituicaoComponent } from './component/instituicao/instituicao.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ConfirmDialogComponent } from './component/util/confirm-dialog/confirm-dialog.component';
+import { SuccessDialogComponent } from './component/util/success-dialog/success-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,7 +24,9 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     MenubarComponent,
-    InstituicaoComponent
+    InstituicaoComponent,
+    ConfirmDialogComponent,
+    SuccessDialogComponent
   ],
   
   providers: [],

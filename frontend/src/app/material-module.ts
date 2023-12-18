@@ -43,7 +43,7 @@ exports:[
     MatNativeDateModule,
     MatRadioModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
 ]
 })
 export class MaterialModule{}
