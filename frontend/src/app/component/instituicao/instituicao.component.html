@@ -1,36 +1,50 @@
 <app-menubar>
-
+    
     <form #form="ngForm" (ngSubmit)="submitForm(form)">
-        <input  type="text" [(ngModel)]="instituicao.id"  name="id"  class="form-control" readonly>
-        <input  type="text" [(ngModel)]="instituicao.nome"  name="nome"  class="form-control" required>
         
+        <mat-card-content>
+            <mat-card-header>
+                <mat-card-title>Instituições</mat-card-title>
+              </mat-card-header>
+        </mat-card-content>
+        <mat-card-content class="row">
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Código</mat-label>
+                <input [(ngModel)]="instituicao.id"  name="id" matInput readonly>
+            </mat-form-field >
+            <mat-form-field class="col col-lg-9">
+                <mat-label>Instituição</mat-label>
+                <input [(ngModel)]="instituicao.nome"  name="nome" matInput  required>
+            </mat-form-field>
+
+        </mat-card-content>
         {{form.valid}}
-        <button>Submit</button>
+
+        <div class="row">
+          <div class="col col-lg-12 text-center">
+            <button type="button" (click)="firstProduct()" class="btn btn-primary btn_grid" >Primeiro Produto</button>
+            <button type="button" (click)="prevProduct()" class="btn btn-primary btn_grid" >Anterior Produto</button>
+            <button type="button" (click)="nextProduct()" class="btn btn-primary btn_grid" >Próximo Produto</button>
+            <button type="button" (click)="lastProduct()" class="btn btn-primary btn_grid" >Último Produto</button>
+            <button type="button" class="btn btn-success btn_grid">Novo Cadastro</button>
+            <button class="btn btn-danger btn_grid">Salvar Cadastro</button>
+          </div>
+        </div>
+        
+       
     </form>
     {{form.value | json }}
     
-    <div>
-      <!-- Adicionar botões de navegação -->
-      <button (click)="firstProduct()">Primeiro Produto</button>
-      <button (click)="prevProduct()">Anterior Produto</button>
-      <button (click)="nextProduct()">Próximo Produto</button>
-      <button (click)="lastProduct()">Último Produto</button>
-    </div>
+
     {{currentProductIndex}}
     <li *ngFor="let item of instituicaos">
-    
-    [{{item.id}}]  
-    <input type="text" [(ngModel)] = "item.nome" >
-    <button (click)="instituicaoViu(item.id)">Visualizar</button>
-    <button (click)="instituicaoDelete(item.id)">Delete</button>
+        [{{item.id}}]  
+        <input type="text" [(ngModel)] = "item.nome" >
+        <button (click)="instituicaoViu(item.id)">Visualizar</button>
+        <button (click)="instituicaoDelete(item.id)">Delete</button>
     </li>
     
     <!-- Adicionar navegação de página -->
-    <div>
-      <button *ngFor="let page of pages" (click)="onPageChange(page)">
-        {{ page }}
-      </button>
-    </div>
     
     <div>
       <button (click)="firstPage()">Primeira</button>

@@ -28,7 +28,7 @@
               <button mat-button> <mat-icon>dashboard</mat-icon>Dashboard</button>
           </mat-list-item>
           <mat-list-item routerLink="#">
-            <button mat-button> <mat-icon>home</mat-icon>Home</button>
+            <button mat-button> <mat-icon>home</mat-icon>Instituições</button>
         </mat-list-item>
 
 
@@ -56,8 +56,11 @@
   </mat-sidenav>
   <mat-sidenav-content>
       <router-outlet>
-        
-<ng-content></ng-content>
+
+        <mat-card class="container-fluid">        
+            <ng-content></ng-content>
+        </mat-card>
+
       </router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
