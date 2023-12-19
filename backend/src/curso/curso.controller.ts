@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe  } from '@nestjs/common';
 import { CursoService } from './curso.service';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
@@ -13,8 +13,12 @@ export class CursoController {
   }
 
   @Get()
-  findAll() {
-    return this.cursoService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('pageSize', ParseIntPipe) pageSize: number = 10,
+    @Query('nome') nomePesquisa: string = '',
+  ) {
+    return this.cursoService.findAll(page, pageSize, nomePesquisa);
   }
 
   @Get(':id')

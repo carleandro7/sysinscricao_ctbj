@@ -1,4 +1,104 @@
 <app-menubar>
-    teste
+    
+    <form [formGroup]="formCadastro">
+        
+        <mat-card-content>
+            <mat-card-header>
+                <mat-card-title>Cursos</mat-card-title>
+              </mat-card-header>
+        </mat-card-content>
+        <mat-card-content class="row">
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Código</mat-label>
+                <input formControlName="id" matInput placeholder="Código" readonly>
+            </mat-form-field >
+            <mat-form-field class="col col-lg-7">
+                <mat-label>Instituição</mat-label>
+                <mat-select formControlName="instituicaoId"  placeholder="Selecione uma instituição" required>
+                  <mat-option *ngFor="let te of instituicoes" [value]="te.id">
+                    {{ te.nome }}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-6">
+                <mat-label>Curso</mat-label>
+                <input formControlName="nome" matInput placeholder="Nome" required>
+            </mat-form-field>
+            
+
+        </mat-card-content>
+
+    </form>
+    
+    <div class="row">
+      <div class="col col-lg-4 ">
+          <mat-card-content class="row">
+            <mat-form-field class="col col-lg-10 text-center">
+              <input matInput [(ngModel)]="termoPesquisa" placeholder="Pesquisar pelo nome">
+            </mat-form-field>
+           <button mat-icon-button type="submit"  (click)="pesquisar()">
+                <mat-icon aria-label="Search">search</mat-icon>
+              </button>
+        </mat-card-content>
+       
+      </div>
+      <div class="col col-lg-8 ">
+        <div class="row nav-grid">
+          <div class="col col-lg-12 text-center">
+            <button type="button" (click)="firstapp()" [disabled]="firstButton == 0" class="btn btn-primary btn_grid" >Primeiro Produto</button>
+            <button type="button" (click)="prevapp()" [disabled]="prevButton == 0" class="btn btn-primary btn_grid" >Anterior Produto</button>
+            <button type="button" (click)="nextapp()" [disabled]="nextButton == 0" class="btn btn-primary btn_grid" >Próximo Produto</button>
+            <button type="button" (click)="lastapp()" [disabled]="lastButton == 0" class="btn btn-primary btn_grid" >Último Produto</button>
+            <button type="button" (click)="novoCadastro()" class="btn btn-info btn_grid">Novo Cadastro</button>
+            <button type="button" (click)="submitForm()" class="btn btn-success btn_grid">Salvar Cadastro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> Código </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef> Curso</th>
+          <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+        </ng-container>
+        <ng-container matColumnDef="instituicaoId">
+            <th mat-header-cell *matHeaderCellDef> Instituição</th>
+            <td mat-cell *matCellDef="let element"> {{element.instituicao.nome}} </td>
+          </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="appVisualizar(element.id)">
+              <mat-icon aria-label="Edit">edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="appDelete(element.id)">
+              <mat-icon aria-label="Delete">delete</mat-icon>
+            </button>
+           
+          </td>
+         
+        </ng-container> 
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          [class.selected-row]="selectedRowIndex === row.id"
+          (click)="linha_tabela(row)"
+          *matRowDef="let row; columns: displayedColumns;">
+          {{row}}
+        </tr>
+        
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+    
 
 </app-menubar>

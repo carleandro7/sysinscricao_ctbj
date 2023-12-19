@@ -21,6 +21,11 @@ export class InstituicaoController {
     return this.instituicaoService.findAll(page, pageSize, nomePesquisa);
   }
 
+  @Get('all')
+  findAllSimples() {
+    return this.instituicaoService.findAll_simples();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.instituicaoService.findOne(+id);

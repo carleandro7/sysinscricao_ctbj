@@ -24,6 +24,9 @@ export class InstituicaoService {
               contains: nomePesquisa,
               mode: 'insensitive', // Torna a comparação insensível a maiúsculas e minúsculas
             },
+          },
+          orderBy:{
+            nome: 'asc'
           }
         }),
         this.prisma.instituicao.count(),
@@ -35,11 +38,27 @@ export class InstituicaoService {
           skip,
           take,
           include: {cursos: true, users: true, modulos: true, selecaomodelos: true},
+          orderBy:{
+            nome: 'asc'
+          }
         }),
         this.prisma.instituicao.count(),
       ])
       return [data, totalItems]
     }
+  }
+
+  async findAll_simples() {
+      const [data, totalItems] = await Promise.all([
+        this.prisma.instituicao.findMany({
+          orderBy:{
+            nome: 'asc'
+          }
+        }),
+        this.prisma.instituicao.count(),
+      ])
+      return [data, totalItems]
+    
   }
 
   findOne(id: number) {
