@@ -12,19 +12,34 @@ export class InstituicaoService {
   }
 
 
-  async findAll(page: number, pageSize: number) {
+  async findAll(page: number, pageSize: number, nomePesquisa: string) {
     const skip = (page - 1) * pageSize;
     const take = pageSize;
-    const [data, totalItems] = await Promise.all([
-      this.prisma.instituicao.findMany({
-        skip,
-        take,
-        include: {cursos: true, users: true, modulos: true, selecaomodelos: true},
-      }),
-      this.prisma.instituicao.count(),
-    ])
-
-    return [data, totalItems]
+    if(page == 0){
+      const [data, totalItems] = await Promise.all([
+        this.prisma.instituicao.findMany({
+          include: {cursos: true, users: true, modulos: true, selecaomodelos: true},
+          where:{
+            nome: {
+              contains: nomePesquisa,
+              mode: 'insensitive', // Torna a comparação insensível a maiúsculas e minúsculas
+            },
+          }
+        }),
+        this.prisma.instituicao.count(),
+      ])
+      return [data, totalItems]
+    }else{
+      const [data, totalItems] = await Promise.all([
+        this.prisma.instituicao.findMany({
+          skip,
+          take,
+          include: {cursos: true, users: true, modulos: true, selecaomodelos: true},
+        }),
+        this.prisma.instituicao.count(),
+      ])
+      return [data, totalItems]
+    }
   }
 
   findOne(id: number) {

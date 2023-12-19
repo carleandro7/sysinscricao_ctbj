@@ -16,9 +16,9 @@ export class InstituicaoController {
   findAll(
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('pageSize', ParseIntPipe) pageSize: number = 10,
+    @Query('nome') nomePesquisa: string = '',
   ) {
-console.log(`${page}  ${pageSize}`)
-    return this.instituicaoService.findAll(page, pageSize);
+    return this.instituicaoService.findAll(page, pageSize, nomePesquisa);
   }
 
   @Get(':id')
