@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from './component/util/confirm-dialog/confirm-
 import { SuccessDialogComponent } from './component/util/success-dialog/success-dialog.component';
 import { CursosComponent } from './component/cursos/cursos.component';
 import { DbgridComponent } from './component/util/dbgrid/dbgrid.component';
+import { ModulosComponent } from './component/modulos/modulos.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { DbgridComponent } from './component/util/dbgrid/dbgrid.component';
     ConfirmDialogComponent,
     SuccessDialogComponent,
     DbgridComponent,
+    ModulosComponent,
   ],
   
   providers: [],

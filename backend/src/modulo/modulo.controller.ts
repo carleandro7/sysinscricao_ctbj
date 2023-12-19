@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
 import { ModuloService } from './modulo.service';
 import { CreateModuloDto } from './dto/create-modulo.dto';
 import { UpdateModuloDto } from './dto/update-modulo.dto';
@@ -13,8 +13,12 @@ export class ModuloController {
   }
 
   @Get()
-  findAll() {
-    return this.moduloService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('pageSize', ParseIntPipe) pageSize: number = 10,
+    @Query('nome') nomePesquisa: string = '',
+  ) {
+    return this.moduloService.findAll(page, pageSize, nomePesquisa);
   }
 
   @Get(':id')
