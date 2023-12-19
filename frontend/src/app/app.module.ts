@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogComponent } from './component/util/confirm-dialog/confirm-dialog.component';
 import { SuccessDialogComponent } from './component/util/success-dialog/success-dialog.component';
+import { CursosComponent } from './component/cursos/cursos.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { SuccessDialogComponent } from './component/util/success-dialog/success-
     AppComponent,
     MenubarComponent,
     InstituicaoComponent,
+    CursosComponent,
     ConfirmDialogComponent,
     SuccessDialogComponent
   ],

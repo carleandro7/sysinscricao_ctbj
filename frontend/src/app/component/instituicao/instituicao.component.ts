@@ -1,4 +1,3 @@
-
 import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
 import {  FormBuilder, FormGroup, Validators,  } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,8 +7,6 @@ import { InstituicaoService } from 'src/app/services/instituicao.service';
 import { ConfirmDialogComponent, ConfirmDialogData  } from '../util/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessDialogComponent, SuccessDialoggData } from '../util/success-dialog/success-dialog.component';
-
-
 
 @Component({
   selector: 'app-instituicao',

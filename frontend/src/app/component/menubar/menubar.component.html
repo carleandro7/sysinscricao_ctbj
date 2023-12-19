@@ -24,14 +24,13 @@
 <mat-sidenav-container class="app-container" >
   <mat-sidenav #sidenav opened="true" mode="side" [class.mat-elevation-z5]="true" class="app-sidenav">
       <mat-nav-list>
-          <mat-list-item routerLink="#">
-              <button mat-button> <mat-icon>dashboard</mat-icon>Dashboard</button>
-          </mat-list-item>
-          <mat-list-item routerLink="#">
+          <mat-list-item routerLink="/instituicao">
             <button mat-button> <mat-icon>home</mat-icon>Instituições</button>
         </mat-list-item>
-
-
+          <mat-list-item routerLink="/cursos">
+              <button mat-button> <mat-icon>dashboard</mat-icon>Cursos</button>
+          </mat-list-item>
+        
           <mat-expansion-panel [class.mat-elevation-z0]="true">
               <mat-expansion-panel-header>
                   Mobile Phone
