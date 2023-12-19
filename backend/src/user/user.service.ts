@@ -9,6 +9,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
+    console.log(createUserDto)
     const createdUser = await this.prisma.user.create({ data: {
       ...createUserDto,
       senha: await bcrypt.hash(createUserDto.senha, 10),
@@ -20,17 +21,48 @@ export class UserService {
     };
   }
 
-  findAll() {
-    return this.prisma.user.findMany({
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-        telefone: true,
-        status: true,
-        instituicaoId: true
-      }
-    });
+  async findAll(page: number = 0, pageSize: number = 0, nomePesquisa: string= '') {
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+    
+    if(page == 0){
+      const [data, totalItems] = await Promise.all([
+        this.prisma.user.findMany({
+          select: {
+            id: true,
+            nome: true,
+            email: true,
+            telefone: true,
+            status: true,
+            instituicaoId: true,
+          },
+          where:{
+            nome: {
+              contains: nomePesquisa,
+              mode: 'insensitive', // Torna a comparação insensível a maiúsculas e minúsculas
+            },
+          },
+          orderBy:{
+            nome: 'asc'
+          }
+        }),
+        this.prisma.user.count(),
+      ])
+      return [data, totalItems]
+    }else{
+      const [data, totalItems] = await Promise.all([
+        this.prisma.user.findMany({
+          skip,
+          take,
+          include: {instituicao: true},
+          orderBy:{
+            nome: 'asc'
+          }
+        }),
+        this.prisma.user.count(),
+      ])
+      return [data, totalItems]
+    }
   }
 
   findOne(id: number) {
@@ -47,15 +79,32 @@ export class UserService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const createdUser = this.prisma.user.update({
-      where: { id },
-      data: updateUserDto
-    });
-    return {
-      ...updateUserDto,
-      senha: undefined,
-    };
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto)
+    if(updateUserDto.senha != "" && updateUserDto.senha != null){
+      const createdUser = this.prisma.user.update({
+        where: { id },
+        data: {
+          ...updateUserDto,
+          senha: await bcrypt.hash(updateUserDto.senha, 10),
+        }
+      });
+      return {
+        ...createdUser,
+        senha: undefined,
+      };
+    }else{
+      const {senha, ...dados} = updateUserDto;
+      const createdUser = this.prisma.user.update({
+        where: { id },
+        data: dados
+      });
+      return {
+        ...createdUser,
+        senha: undefined,
+      };
+    }
+
   }
 
   remove(id: number) {

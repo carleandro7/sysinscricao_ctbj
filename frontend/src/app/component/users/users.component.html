@@ -4,7 +4,7 @@
         
         <mat-card-content>
             <mat-card-header>
-                <mat-card-title>Módulos</mat-card-title>
+                <mat-card-title>Usuários</mat-card-title>
               </mat-card-header>
         </mat-card-content>
         <mat-card-content class="row">
@@ -12,7 +12,7 @@
                 <mat-label>Código</mat-label>
                 <input formControlName="id" matInput placeholder="Código" readonly>
             </mat-form-field >
-            <mat-form-field class="col col-lg-7">
+            <mat-form-field class="col col-lg-8">
                 <mat-label>Instituição</mat-label>
                 <mat-select formControlName="instituicaoId"  placeholder="Selecione uma instituição" required>
                   <mat-option *ngFor="let item of instituicoes" [value]="item.id">
@@ -20,12 +20,30 @@
                   </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field class="col col-lg-6">
-                <mat-label>Curso</mat-label>
+            <mat-form-field class="col col-lg-5">
+                <mat-label>Nome</mat-label>
                 <input formControlName="nome" matInput placeholder="Nome" required>
             </mat-form-field>
-            
-
+            <mat-form-field class="col col-lg-5">
+                <mat-label>Email</mat-label>
+                <input formControlName="email" matInput placeholder="Email" required type="email">
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Telefone</mat-label>
+                <input formControlName="telefone" matInput placeholder="Telefone">
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" placeholder="Status" required>
+                    <mat-option *ngFor="let opcao of opcoesStatus" [value]="opcao.valor">
+                      {{ opcao.descricao }}
+                    </mat-option>
+                  </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-5">
+                <mat-label>Senha</mat-label>
+                <input formControlName="senha" matInput placeholder="Senha" type="password">
+            </mat-form-field>
         </mat-card-content>
 
     </form>
@@ -67,12 +85,24 @@
         </ng-container>
       
         <ng-container matColumnDef="nome">
-          <th mat-header-cell *matHeaderCellDef> Módulo</th>
+          <th mat-header-cell *matHeaderCellDef> Nome</th>
           <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+        </ng-container>
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email</th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+        <ng-container matColumnDef="telefone">
+            <th mat-header-cell *matHeaderCellDef> Telefone</th>
+            <td mat-cell *matCellDef="let element"> {{element.telefone}} </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status</th>
+            <td mat-cell *matCellDef="let element"> {{obterDescricaoStatus(element.status)}} </td>
         </ng-container>
         <ng-container matColumnDef="instituicaoId">
             <th mat-header-cell *matHeaderCellDef> Instituição</th>
-            <td mat-cell *matCellDef="let element"> {{element.instituicao.nome}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.instituicaoId}} </td>
           </ng-container>
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef></th>

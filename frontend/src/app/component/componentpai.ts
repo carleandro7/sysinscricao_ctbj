@@ -101,7 +101,7 @@ export class Componentpai {
                 this.msg_dialogo("", "Alterado com Sucesso!")
               },
               error: (err) => {
-                this.msg_dialogo("Erro", err)
+                this.msg_dialogo("Erro", err.message )
               }
             });
           }
@@ -143,10 +143,8 @@ export class Componentpai {
                 //console.log('Exclusão cancelada.');
             }
             });
-            
         }
 
-        
         selectRow(row: any) {
             this.selectedRowIndex = row.id; // Supondo que você tenha uma propriedade id na sua fonte de dados
             const aux = this.apps.filter(app => app.id === row.id);
@@ -203,7 +201,7 @@ export class Componentpai {
           this.verificaButton();
         }
       
-        public onPageChange1(event: any): void  {
+        public onPageChange(event: any): void  {
           if(this.size_page != this.paginator.pageSize && this.size_page > this.paginator.pageSize){
             if (this.apps.length > 0) {
               this.linha_tabela(this.apps[0]);

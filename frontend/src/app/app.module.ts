@@ -14,6 +14,7 @@ import { SuccessDialogComponent } from './component/util/success-dialog/success-
 import { CursosComponent } from './component/cursos/cursos.component';
 import { DbgridComponent } from './component/util/dbgrid/dbgrid.component';
 import { ModulosComponent } from './component/modulos/modulos.component';
+import { UsersComponent } from './component/users/users.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { ModulosComponent } from './component/modulos/modulos.component';
     SuccessDialogComponent,
     DbgridComponent,
     ModulosComponent,
+    UsersComponent,
   ],
   
   providers: [],
