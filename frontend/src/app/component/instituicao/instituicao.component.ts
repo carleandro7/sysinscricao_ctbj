@@ -1,6 +1,6 @@
 
 import { Component, AfterViewInit, OnInit, ViewChild} from '@angular/core';
-import {  NgForm  } from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators,  } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { InstituicaoModel } from 'src/app/module/instituicao-model';
@@ -31,7 +31,36 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
   public prevButton: number = 0;
   public lastButton: number = 0;
 
-  constructor(private dialog: MatDialog, private instituicaoService: InstituicaoService){}
+  public formCadastro: FormGroup;
+
+
+  termoPesquisa: string = '';
+
+  pesquisar(): void {
+    
+    this.instituicaoService.getInsituicao(0,0, this.termoPesquisa)
+      .subscribe({
+        next: (res) => {
+          this.instituicaos =  res[0];
+          this.dataSource= new MatTableDataSource(this.instituicaos);
+          this.dataSource.paginator = this.paginator;
+          this.index_aux = -1;
+          this.verificaButton();
+          this.clearForm()
+        },
+        error: (err) => this.msg_dialogo("Erro", err)
+    });
+  }
+
+  constructor(private fb: FormBuilder, private dialog: MatDialog, private instituicaoService: InstituicaoService){
+    this.formCadastro = this.fb.group({
+      // Defina os campos do seu formulário aqui
+      id: [''],
+      nome: ['', [Validators.required]],
+      // Adicione outros campos conforme necessário
+    });
+  }
+
 
   ngOnInit(): void{
     this.loadInstituicao();
@@ -42,7 +71,7 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
   }
 
   public loadInstituicao(): void {
-    this.instituicaoService.getInsituicao(0,0)
+    this.instituicaoService.getInsituicao(0,0, this.termoPesquisa)
       .subscribe({
         next: (res) => {
           this.instituicaos =  res[0];
@@ -60,6 +89,7 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
     this.selectedRowIndex = row.id; // Supondo que você tenha uma propriedade id na sua fonte de dados
     const aux = this.instituicaos.filter(instituicao => instituicao.id === row.id);
     this.instituicao = aux[0];
+    this.preencherFormulario(this.instituicao)
     this.index_aux = this.instituicaos.indexOf(this.instituicao);
   }
   
@@ -93,37 +123,53 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public submitForm(form: NgForm){
-    if(!form.value.id){
-      this.instituicaoService.instituicaoAdd(form.value.nome).subscribe({
-        next: (res) => {
-          this.loadInstituicao()
-          form.reset()
-          this.msg_dialogo("Aviso", "Salvo com Sucesso!")
-        },
-        error: (err) => {
-          this.msg_dialogo("Erro", err)
-        }
-      });
+  public submitForm(){
+    if (this.formCadastro.valid) {
+      if(!this.formCadastro.value.id){
+        this.instituicaoService.instituicaoAdd(this.formCadastro.value.nome).subscribe({
+          next: (res) => {
+            this.loadInstituicao()
+            this.formCadastro.reset()
+            this.msg_dialogo("", "Salvo com Sucesso!")
+          },
+          error: (err) => {
+            this.msg_dialogo("Erro", err)
+          }
+        });
+      }else{
+        this.instituicaoEdit(this.formCadastro.value.id, this.formCadastro.value.nome)
+      }
     }else{
-      this.instituicaoEdit(form.value.id, form.value.nome, form)
+      this.msg_dialogo("Aviso", "Verique se todos os campos necessários estão preenchidos!")
     }
   }
 
-  public clearForm(form: NgForm){
-    this.instituicao = {}
+  preencherFormulario(instituicao: any): void {
+    this.formCadastro.patchValue({
+      nome: instituicao.nome,
+      id: instituicao.id
+      // Atualize com outros campos conforme necessário
+    });
+  }
+
+  public novoCadastro(){
+    this.clearForm();
+    this.termoPesquisa = "";
+  }
+
+  public clearForm(){
+     this.formCadastro.reset()
     this.index_aux = -1;
     this.selectedRowIndex = -1;
     this.verificaButton();
-    form.reset()
   }
 
-  public instituicaoEdit(id:number, value:string, form: NgForm){
+  public instituicaoEdit(id:number, value:string,){
     this.instituicaoService.instituicaoEdit(id, value).subscribe({
       next: (res) => { 
         this.loadInstituicao()
-        form.reset()
-        this.msg_dialogo("Aviso", "Alterado com Sucesso!")
+         this.formCadastro.reset()
+        this.msg_dialogo("", "Alterado com Sucesso!")
       },
       error: (err) => {
         this.msg_dialogo("Erro", err)
@@ -200,7 +246,7 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
         this.instituicao = res
       },
       error: (err) => {
-        window.alert("Erro ao alterar")
+        this.msg_dialogo("Erro", "Erro ao Visualizar!")
       }
     });
   }
@@ -210,8 +256,6 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
       title: 'Confirmar Exclusão',
       message: `Tem certeza que deseja excluir este item de código ${id} ?`
     };
-
-  
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: dialogData
     });
@@ -222,8 +266,8 @@ export class InstituicaoComponent implements OnInit, AfterViewInit {
          this.instituicaoService.instituicaoDelete(id).subscribe({
           next: (res) => {
             this.loadInstituicao();
-            this.instituicao = {}
-            this.msg_dialogo("Aviso", "Excluído com sucesso")
+             this.formCadastro.reset()
+            this.msg_dialogo("", "Excluído com sucesso")
             },
             error: (err) => {
               this.msg_dialogo("Erro", err)

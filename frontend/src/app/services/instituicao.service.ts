@@ -21,8 +21,8 @@ export class InstituicaoService {
     )
   }
 
-  public getInsituicao(page: number, pageSize: number): Observable<any[]> {
-    const url_aux = `${this.url}instituicoes?page=${page}&pageSize=${pageSize}`;
+  public getInsituicao(page: number, pageSize: number, nomePesquisa: string): Observable<any[]> {
+    const url_aux = `${this.url}instituicoes?nome=${nomePesquisa}&page=${page}&pageSize=${pageSize}`;
     return this.http.get<InstituicaoModel[]>(url_aux);
   }
 

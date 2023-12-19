@@ -20,6 +20,7 @@ import { SuccessDialogComponent } from './component/util/success-dialog/success-
     MaterialModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule
   ],
   declarations: [
     AppComponent,
