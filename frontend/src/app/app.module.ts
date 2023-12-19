@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ConfirmDialogComponent } from './component/util/confirm-dialog/confirm-dialog.component';
 import { SuccessDialogComponent } from './component/util/success-dialog/success-dialog.component';
 import { CursosComponent } from './component/cursos/cursos.component';
+import { DbgridComponent } from './component/util/dbgrid/dbgrid.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { CursosComponent } from './component/cursos/cursos.component';
     InstituicaoComponent,
     CursosComponent,
     ConfirmDialogComponent,
-    SuccessDialogComponent
+    SuccessDialogComponent,
+    DbgridComponent,
   ],
   
   providers: [],

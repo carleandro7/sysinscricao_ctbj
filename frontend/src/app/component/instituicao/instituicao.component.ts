@@ -28,11 +28,11 @@ export class InstituicaoComponent extends Componentpai implements OnInit, AfterV
     
   }
 
-   ngOnInit(): void{
+  ngOnInit(): void{
     this.loadapp();
   }
 
-   ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.size_page = this.paginator.pageSize;
   }
 
@@ -43,6 +43,5 @@ export class InstituicaoComponent extends Componentpai implements OnInit, AfterV
       instituicaoId: curso.instituicaoId,
     });
   }
-
 
 }

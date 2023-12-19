@@ -23,7 +23,7 @@ export class Componentpai {
         public dataSource:any;
         public clickedRows = new Set<AppModel>();
         public selectedRowIndex: number = -1;
-        private index_aux:number = -1;
+        protected index_aux:number = -1;
         public size_page:number = 0;
         public firstButton: number = 0;
         public nextButton: number = 0;
@@ -65,13 +65,12 @@ export class Componentpai {
                 this.dataSource.paginator = this.paginator;
                 this.index_aux = -1;
                 this.verificaButton();
-                console.log(this.apps)
               },
               error: (err) => console.log(err)
           });
         }
       
-        public submitForm(){
+        public submitForm = (): void => {
           if (this.formCadastro.valid) {
             if(!this.formCadastro.value.id){
             const { id, ...objeto } = this.formCadastro.value;
@@ -192,7 +191,7 @@ export class Componentpai {
           });
         }
       
-        public novoCadastro(){
+        public novoCadastro = (): void => {
           this.clearForm();
           this.termoPesquisa = "";
         }
@@ -204,9 +203,7 @@ export class Componentpai {
           this.verificaButton();
         }
       
-
-      
-        onPageChange(event: any) {
+        public onPageChange1(event: any): void  {
           if(this.size_page != this.paginator.pageSize && this.size_page > this.paginator.pageSize){
             if (this.apps.length > 0) {
               this.linha_tabela(this.apps[0]);
@@ -235,7 +232,7 @@ export class Componentpai {
         }
       
         // Função para navegar para o primeiro produto
-        public firstapp(): void {
+        public firstapp = (): void => {
           if (this.apps.length > 0) {
             this.linha_tabela(this.apps[0]);
             this.goToPage(0);
@@ -243,7 +240,7 @@ export class Componentpai {
         }
       
         // Função para navegar para o produto anterior
-        prevapp(): void {
+        public prevapp = (): void => {
           if (this.index_aux > 0) {
             this.index_aux = this.apps.indexOf(this.app);
             this.linha_tabela( this.apps[this.index_aux-1]);
@@ -252,7 +249,7 @@ export class Componentpai {
         }
       
         // Função para navegar para o próximo produto
-        nextapp(): void {
+        nextapp = (): void => {
           if (this.index_aux < this.apps.length - 1) {
             this.index_aux = this.apps.indexOf(this.app);
             this.linha_tabela( this.apps[this.index_aux+1])
@@ -261,7 +258,7 @@ export class Componentpai {
         }
       
         // Função para navegar para o último produto
-        lastapp(): void {
+        lastapp = (): void => {
           if (this.apps.length-1 > this.index_aux) {
             this.linha_tabela( this.apps[this.apps.length - 1])
             const total = this.calcularTotalPaginas()
