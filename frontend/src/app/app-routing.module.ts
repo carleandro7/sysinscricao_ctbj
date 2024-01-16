@@ -4,6 +4,7 @@ import { CursosComponent } from './component/cursos/cursos.component';
 import { InstituicaoComponent } from './component/instituicao/instituicao.component';
 import { ModulosComponent } from './component/modulos/modulos.component';
 import { UsersComponent } from './component/users/users.component';
+import { SelecaomodelosComponent } from './component/selecaomodelos/selecaomodelos.component';
 
 
 const routes: Routes = [
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'cursos', component: CursosComponent },
   { path: 'modulos', component: ModulosComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'selecaomodelos', component: SelecaomodelosComponent },
   // Adicione outras rotas conforme necessário
   { path: '', redirectTo: '/instituicao', pathMatch: 'full' }, // Rota padrão
   { path: '**', redirectTo: '/instituicao', pathMatch: 'full' }, // Rota padrão para qualquer caminho inválido

@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe  } from '@nestjs/common';
 import { SelecaomodeloService } from './selecaomodelo.service';
 import { CreateSelecaomodeloDto } from './dto/create-selecaomodelo.dto';
 import { UpdateSelecaomodeloDto } from './dto/update-selecaomodelo.dto';
 
-@Controller('selecaomodelo')
+@Controller('selecaomodelos')
 export class SelecaomodeloController {
   constructor(private readonly selecaomodeloService: SelecaomodeloService) {}
 
@@ -13,8 +13,12 @@ export class SelecaomodeloController {
   }
 
   @Get()
-  findAll() {
-    return this.selecaomodeloService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('pageSize', ParseIntPipe) pageSize: number = 10,
+    @Query('nome') nomePesquisa: string = '',
+  ) {
+    return this.selecaomodeloService.findAll(page, pageSize, nomePesquisa);
   }
 
   @Get(':id')

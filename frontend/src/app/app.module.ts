@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID  } from '@angular/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +17,7 @@ import { CursosComponent } from './component/cursos/cursos.component';
 import { DbgridComponent } from './component/util/dbgrid/dbgrid.component';
 import { ModulosComponent } from './component/modulos/modulos.component';
 import { UsersComponent } from './component/users/users.component';
+import { SelecaomodelosComponent } from './component/selecaomodelos/selecaomodelos.component';
 
 @NgModule({
   imports: [
@@ -36,9 +39,13 @@ import { UsersComponent } from './component/users/users.component';
     DbgridComponent,
     ModulosComponent,
     UsersComponent,
+    SelecaomodelosComponent,
   ],
   
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' }, // Idioma brasileiro
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Formato de data brasileiro
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

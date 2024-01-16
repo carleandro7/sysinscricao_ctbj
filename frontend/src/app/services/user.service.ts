@@ -26,7 +26,6 @@ export class UserService extends AppService{
   }
 
   public objectAdd(value: []): Observable<UserModel>{
-    console.log(value)
     return this.http.post<UserModel>(`${this.url}users`, value)
     .pipe(
       res => res,
@@ -35,7 +34,6 @@ export class UserService extends AppService{
   }
 
   public objectEdit(id: number, value: []): Observable<UserModel>{
-    console.log(value)
     return this.http.patch<UserModel>(`${this.url}users/${id}`, value)
     .pipe(
       res => res,

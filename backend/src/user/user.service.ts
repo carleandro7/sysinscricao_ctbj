@@ -9,7 +9,6 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
-    console.log(createUserDto)
     const createdUser = await this.prisma.user.create({ data: {
       ...createUserDto,
       senha: await bcrypt.hash(createUserDto.senha, 10),
@@ -80,7 +79,6 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto)
     if(updateUserDto.senha != "" && updateUserDto.senha != null){
       const createdUser = this.prisma.user.update({
         where: { id },

@@ -28,8 +28,41 @@ export class SelecaomodeloService {
     })
   }
 
-  findAll() {
-    return this.prisma.selecaomodelo.findMany();
+  async findAll(page: number = 0, pageSize: number = 0, nomePesquisa: string= '') {
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+
+    if(page == 0){
+      const [data, totalItems] = await Promise.all([
+        this.prisma.selecaomodelo.findMany({
+ 
+          where:{
+            descricao: {
+              contains: nomePesquisa,
+              mode: 'insensitive', // Torna a comparação insensível a maiúsculas e minúsculas
+            },
+          },
+          orderBy:{
+            id: 'desc'
+          }
+        }),
+        this.prisma.selecaomodelo.count(),
+      ])
+      return [data, totalItems]
+    }else{
+      const [data, totalItems] = await Promise.all([
+        this.prisma.selecaomodelo.findMany({
+          skip,
+          take,
+          include: {instituicao: true},
+          orderBy:{
+            id: 'desc'
+          }
+        }),
+        this.prisma.selecaomodelo.count(),
+      ])
+      return [data, totalItems]
+    }
   }
 
   findOne(id: number) {

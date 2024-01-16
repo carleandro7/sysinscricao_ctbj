@@ -1,0 +1,161 @@
+<app-menubar>
+    <form [formGroup]="formCadastro">
+        
+        <mat-card-content>
+            <mat-card-header>
+                <mat-card-title>Seleções</mat-card-title>
+              </mat-card-header>
+        </mat-card-content>
+        <mat-card-content class="row">
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Código</mat-label>
+                <input formControlName="id" matInput placeholder="Código" readonly>
+            </mat-form-field >
+            <mat-form-field class="col col-lg-9">
+                <mat-label>Instituição</mat-label>
+                <mat-select formControlName="instituicaoId"  placeholder="Selecione uma instituição" required>
+                  <mat-option *ngFor="let item of instituicoes" [value]="item.id">
+                    {{ item.nome }}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-12">
+                <mat-label>Descrição</mat-label>
+                <input formControlName="descricao" matInput placeholder="Descrição" required>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data de Início de Inscrição</mat-label>
+                <input formControlName="inicio_inscricao" matInput placeholder="Início de Inscrição" required [matDatepicker]="picker_inicio_inscricao">
+                <mat-datepicker-toggle matSuffix [for]="picker_inicio_inscricao"></mat-datepicker-toggle>
+                <mat-datepicker #picker_inicio_inscricao></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data Fim de Inscrição</mat-label>
+                <input formControlName="fim_inscricao" matInput placeholder="Fim de Inscrição" required [matDatepicker]="picker_fim_inscricao">
+                <mat-datepicker-toggle matSuffix [for]="picker_fim_inscricao"></mat-datepicker-toggle>
+                <mat-datepicker #picker_fim_inscricao></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data Inicio de Resultado</mat-label>
+                <input formControlName="inicio_resultado" matInput placeholder="Inicio de Resultado" required [matDatepicker]="picker_inicio_resultado">
+                <mat-datepicker-toggle matSuffix [for]="picker_inicio_resultado"></mat-datepicker-toggle>
+                <mat-datepicker #picker_inicio_resultado></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data Fim de Resultado</mat-label>
+                <input formControlName="fim_resultado" matInput placeholder="Fim de Resultado" required [matDatepicker]="picker_fim_resultado">
+                <mat-datepicker-toggle matSuffix [for]="picker_fim_resultado"></mat-datepicker-toggle>
+                <mat-datepicker #picker_fim_resultado></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data Inicio de Rescurso</mat-label>
+                <input formControlName="inicio_recurso" matInput placeholder="Inicio de Rescurso" required [matDatepicker]="picker_inicio_recurso">
+                <mat-datepicker-toggle matSuffix [for]="picker_inicio_recurso"></mat-datepicker-toggle>
+                <mat-datepicker #picker_inicio_recurso></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Data Fim de Resultado</mat-label>
+                <input formControlName="fim_recurso" matInput placeholder="Fim de Rescurso" required [matDatepicker]="picker_fim_recurso">
+                <mat-datepicker-toggle matSuffix [for]="picker_fim_recurso"></mat-datepicker-toggle>
+                <mat-datepicker #picker_fim_recurso></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col col-lg-3">
+                <mat-label>Resultado Final</mat-label>
+                <input formControlName="resultado_final" matInput [matDatepicker]="picker_resultado_final" placeholder="Resultado Final" required>
+                <mat-datepicker-toggle matSuffix [for]="picker_resultado_final"></mat-datepicker-toggle>
+                <mat-datepicker #picker_resultado_final></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col col-lg-12">
+                <mat-label>Texto da Documentação</mat-label>
+                <textarea formControlName="texto_documentacao" matInput placeholder="Texto da Documentação" rows="5"  required></textarea>
+            </mat-form-field>
+            <mat-form-field class="col col-lg-12">
+                <mat-label>Texto do Final da Página</mat-label>
+                <textarea formControlName="texto_final_pagina" matInput placeholder="Texto da Documentação" rows="5"  required></textarea>
+            </mat-form-field>
+
+            
+           
+        </mat-card-content>
+
+        
+    </form>
+    
+
+    <div class="row">
+        <div class="col col-lg-4 ">
+            <mat-card-content class="row">
+              <mat-form-field class="col col-lg-10 text-center">
+                <input matInput [(ngModel)]="termoPesquisa" placeholder="Pesquisar pela Descrição">
+              </mat-form-field>
+             <button mat-icon-button type="submit"  (click)="pesquisar()">
+                  <mat-icon aria-label="Search">search</mat-icon>
+                </button>
+          </mat-card-content>
+         
+        </div>
+        <div class="col col-lg-8 ">
+          <app-dbgrid
+          [firstapp] = "firstapp"
+          [prevapp] = "prevapp"
+          [nextapp] = "nextapp"
+          [lastapp] = "lastapp"
+          [novoCadastro] = "novoCadastro"
+          [submitForm] = "submitForm"
+  
+          [firstButton] = "firstButton"
+          [prevButton] = "prevButton"
+          [nextButton] = "nextButton"
+          [lastButton] = "lastButton"
+          >
+          </app-dbgrid>
+        </div>
+      </div>
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> Código </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="descricao">
+                <th mat-header-cell *matHeaderCellDef> Descrição</th>
+                <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+            </ng-container>
+         
+            <ng-container matColumnDef="instituicaoId">
+                <th mat-header-cell *matHeaderCellDef> Instituição</th>
+                <td mat-cell *matCellDef="let element"> {{element.instituicaoId}} </td>
+                </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="appVisualizar(element.id)">
+                    <mat-icon aria-label="Edit">edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="appDelete(element.id)">
+                    <mat-icon aria-label="Delete">delete</mat-icon>
+                </button>
+                
+                </td>
+            </ng-container> 
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            [class.selected-row]="selectedRowIndex === row.id"
+            (click)="linha_tabela(row)"
+            *matRowDef="let row; columns: displayedColumns;">
+            {{row}}
+          </tr>
+          
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"
+              (page)="onPageChange($event)"
+              showFirstLastButtons>
+        </mat-paginator>
+      </div>
+  
+      
+  
+  </app-menubar>
